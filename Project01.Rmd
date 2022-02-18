@@ -1,7 +1,7 @@
 ---
 title: "Group Project 1"
 subtitle: "Biology 368/664 Bucknell University"
-output: html_notebook
+output: github_document
 author: Prof. Ken Field
 date: 9 Feb 2022
 ---
@@ -10,7 +10,13 @@ date: 9 Feb 2022
 # Load other packages here.
 if (!require("datasauRus")) install.packages("datasauRus"); library(datasauRus)
 if (!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
+if (!require("cowplot")) install.packages("cowplot"); library(cowplot)
 ```
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
 
 This project will require you to develop a tutorial to teach Bucknell students how to use R for graphing and data analysis. 
 
@@ -51,9 +57,18 @@ summer21cleaned <- summer21_data[ -c(7:9,16:18,25:27) ]
 gather(summer21cleaned)
 ```
 
+###The code below is used to explaim how to create a graph with two variables. Here we are using ggplot to show how Absorbance and Phosphorus levels interact.
+```{r}
+ ggplot(summer21clean, aes(x = Absorbance, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Absorbance vs Phosphorus') +
+  theme_cowplot()
 
+```
+###It is seen in the graph above that there is a linear trend between absorbance and phosphorus levels.
 
-```{r echo=FALSE}
+```{r}
 
 ```
 
