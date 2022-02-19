@@ -10,6 +10,7 @@ date: 9 Feb 2022
 # Load other packages here.
 if (!require("datasauRus")) install.packages("datasauRus"); library(datasauRus)
 if (!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
+if (!require("reshape2")) install.packages("reshape2"); library(reshape2)
 ```
 
 This project will require you to develop a tutorial to teach Bucknell students how to use R for graphing and data analysis. 
@@ -23,7 +24,7 @@ Examples could be one of the new core Biology classes, another 300-level course 
 
 
 ```{r}
-summer21_data <- read.csv(file = 'summer21UNclean.csv')
+summer21_data <- read.csv(file = 'SUMMERDATAFINAL.csv')
 print(summer21_data)
 
 # print number of columns
@@ -33,24 +34,11 @@ print (ncol(summer21_data))
 print(nrow(summer21_data))
 ```
 
-####upon looking at the data, it is clear there are unnecessary spaces between datasets, column headers, and the data is wide instead of long. We will first start by removing the spaces between datasets and column headers. gsub is a great way to remove unwanted spaces in strings of data. 
+####upon looking at the data, it is clear there are unnecessary spaces between datasets, column headers, and extra columns at the end of the dataset are present. We will first start by removing the spaces between datasets and column headers. gsub is a great way to remove unwanted spaces in strings of data. 
 
 ```{r}
 newsummer21<-gsub(" ", " ", summer21_data)
 ```
-
-#### We can look at the data table now and see the spaces between column headers is replaced by a ".", now we can begin to remove the NA columns from the dataset. 
-
-```{r}
-summer21cleaned <- summer21_data[ -c(7:9,16:18,25:27) ]
-```
-
-#### this worked to remove the extra spacing between the data sets. Now we will focus on changing our data from wide data to long data.
-
-```{r}
-gather(summer21cleaned)
-```
-
 
 
 ```{r echo=FALSE}
