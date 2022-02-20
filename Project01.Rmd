@@ -57,12 +57,12 @@ summer21cleaned <- summer21_data[ -c(7:9,16:18,25:27) ]
 gather(summer21cleaned)
 ```
 
-###The code below is used to explaim how to create a graph with two variables. Here we are using ggplot to show how Absorbance and Phosphorus levels interact.
+###The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Absorbance and Phosphorus levels interact.
 ```{r}
- ggplot(summer21clean, aes(x = Absorbance, y = Phosphorus)) +
+ ggplot(summer21clean, aes(x = Time, y = Phosphorus)) +
   geom_point(position = "jitter",size=0.05) + 
   geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Absorbance vs Phosphorus') +
+  ggtitle('C:  Time vs Phosphorus') +
   theme_cowplot()
 
 ```
