@@ -97,7 +97,7 @@ summary(conleyoneway)
  ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
   geom_point(position = "jitter",size=0.05) + 
   geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Absorbance vs Phosphorus') +
+  ggtitle('C:  Phosphorus Over Time') +
   theme_cowplot()
 
 ```
