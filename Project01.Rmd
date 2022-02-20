@@ -2,7 +2,7 @@
 title: "Group Project 1"
 subtitle: "Biology 368/664 Bucknell University"
 output: github_document
-author: Prof. Ken Field
+author: Group 1
 date: 9 Feb 2022
 ---
 
@@ -10,6 +10,7 @@ date: 9 Feb 2022
 # Load other packages here.
 if (!require("datasauRus")) install.packages("datasauRus"); library(datasauRus)
 if (!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
+if (!require("reshape2")) install.packages("reshape2"); library(reshape2)
 if (!require("cowplot")) install.packages("cowplot"); library(cowplot)
 ```
 
@@ -25,11 +26,13 @@ This project will require you to develop a tutorial to teach Bucknell students h
 Discuss with your group the target audience for the tutorial. 
 Examples could be one of the new core Biology classes, another 300-level course (not 364), or a research group. 
 
-#####Target audiance is any ecology/biology student who has taken field data, the goal is to clean up field data so it is in a useable form for analysis.
+##### Target audiance is any ecology/biology student who has taken field data, the goal is to clean up field data so it is in a useable form for analysis, and determine if trials are interacting or not.
+
+#### HYPOTHESIS: there is a linear relationship between time and phosphorus levels.
 
 
 ```{r}
-summer21_data <- read.csv(file = 'summer21UNclean.csv')
+summer21_data <- read.csv(file = 'SUMMERDATAFINAL.csv')
 print(summer21_data)
 
 # print number of columns
@@ -39,38 +42,74 @@ print (ncol(summer21_data))
 print(nrow(summer21_data))
 ```
 
-####upon looking at the data, it is clear there are unnecessary spaces between datasets, column headers, and the data is wide instead of long. We will first start by removing the spaces between datasets and column headers. gsub is a great way to remove unwanted spaces in strings of data. 
+####upon looking at the data, it is clear there are unnecessary spaces between datasets, column headers, and extra columns at the end of the dataset are present. We will first start by removing the spaces between datasets and column headers. gsub is a great way to remove unwanted spaces in strings of data. 
 
 ```{r}
 newsummer21<-gsub(" ", " ", summer21_data)
 ```
 
+<<<<<<< HEAD
+=======
 #### We can look at the data table now and see the spaces between column headers is replaced by a ".", now we can begin to remove the NA columns from the dataset. 
 
 ```{r}
 summer21cleaned <- summer21_data[ -c(7:9,16:18,25:27) ]
 ```
 
-#### this worked to remove the extra spacing between the data sets. Now we will focus on changing our data from wide data to long data.
+#### given there were two trials per site, it is important to determine if the trials are independent of each other, or can be averaged together. To determine this, we can do a t-test, followed by a one-way ANOVA for confirmation. To get started, we will need to pipe some data into site and trial specific data frames.
 
 ```{r}
-gather(summer21cleaned)
+stoneyrunt1<-summer21cleaned %>% 
+  filter(Location == "Stoney Run",Trial==1)
+stoneyrunt2<-summer21cleaned %>% 
+  filter(Location == "Stoney Run",Trial==2)
+stoneyrunALL<-summer21cleaned %>%
+  filter(Location=="Stoney Run")
+conleyrunt1<-summer21cleaned %>% 
+  filter(Location == "Conley Run",Trial==1)
+conleyrunt2<-summer21cleaned %>% 
+  filter(Location == "Conley Run",Trial==2)
+conleyrunALL<-summer21cleaned %>%
+  filter(Location=="Conley Run")
 ```
 
-###The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Absorbance and Phosphorus levels interact.
+<<<<<<< HEAD
+
+=======
+#### Now that data frames have been made, we can begin analysis to determine relationship.
+
+
 ```{r}
- ggplot(summer21clean, aes(x = Time, y = Phosphorus)) +
+t.test(stoneyrunt1$Phosphorus,stoneyrunt2$Phosphorus)
+t.test(conleyrunt1$Phosphorus,conleyrunt2$Phosphorus)
+```
+>>>>>>> 79b576752041f4f5be03029d3fa3bdf0c4c7f08b
+
+
+#### the t-test revealed a very low p-value for both sites' phosphorus comparison, indicating the trials are independent of each other and cannot be averaged. To conclude this, lets run a one-way ANOVA 
+
+```{r}
+stoneyoneway<-aov(Phosphorus~Trial, data=stoneyrunALL)
+summary(stoneyoneway)
+conleyoneway<-aov(Phosphorus~Trial, data=conleyrunALL)
+summary(conleyoneway)
+```
+
+#### As the t-test suggested, there are significant differences within each trial so analyzation must be done separately per site, per trial.
+
+#### The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within Stoney Run Trial 1.
+```{r}
+ ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
   geom_point(position = "jitter",size=0.05) + 
   geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Time vs Phosphorus') +
+  ggtitle('C:  Time vs Phosphorus Levels') +
   theme_cowplot()
 
 ```
-###It is seen in the graph above that there is a linear trend between absorbance and phosphorus levels.
+###It is seen in the graph above that there is a linear trend between Time and phosphorus levels.
 
-```{r}
-
-```
+#Acknowledgements
+Work was completed by Sierra Rider, Olivia Bongiovi, and Kelsee Dunn.
 
 ## Groups
 
@@ -102,73 +141,3 @@ Each group should use an *Acknowledgements* section to document the participatio
 
 Additional credit will be awarded for providing assistance to other groups and for the development of a tutorial that goes beyond the minimal expectations listed above.
 
-## Sample Dataset
-
-One of the possible datasets to use for the tutorial can be found in the datasauRus package.
-
-```{r}
-datasaurus_dozen %>% 
-  group_by(dataset) %>% 
-  summarize(
-      mean_x    = mean(x),
-      mean_y    = mean(y),
-      std_dev_x = sd(x),
-      std_dev_y = sd(y),
-      corr_x_y  = cor(x, y)
-      )
-```
-
-Boxplots of either the x or the y value show that there is something strange going on.
-
-```{r}
-ggplot(datasaurus_dozen, aes(x = x, colour = dataset))+
-    geom_boxplot()+
-    theme_void()+
-    theme(legend.position = "none")+
-    facet_wrap(~dataset, ncol = 3)
-```
-
-```{r}
-ggplot(datasaurus_dozen, aes(x = y, colour = dataset))+
-    geom_boxplot()+
-    theme_void()+
-    theme(legend.position = "none")+
-    facet_wrap(~dataset, ncol = 3)
-```
-
-But you have to visualize all of the data with a scatter plot to really see the patterns.
-
-```{r fig.height=12, fig.width=9}
-  ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset))+
-    geom_point()+
-    theme_void()+
-    theme(legend.position = "none")+
-    facet_wrap(~dataset, ncol = 3)
-```
-
-And did you notice the code in the {r} codechunk header that controlled the size of the output in the Rmd? Pretty neat trick!
-
-And here are two versions of the data that you could use in your data visualization tutorial. 
-To use them you would probably want to change the names of the datasets and also make x and y more meaningful. 
-Then save them as a csv or tsv to be imported later for your tutorial. 
-
-```{r}
-datasaurus_long <- datasaurus_dozen
-datasaurus_wide <- datasaurus_dozen_wide
-head(datasaurus_long)
-head(datasaurus_wide)
-```
-
-# Acknowledgements
-
-DatasauRus package and description below: Stephanie Locke https://github.com/jumpingrivers/datasauRus
-
-The datasauRus package wraps the awesome Datasaurus Dozen dataset, which contains 13 sets of x-y data. Each sub-dataset has five statistics that are (almost) the same in each case. (These are the mean of x, mean of y, standard deviation of x, standard deviation of y, and Pearson correlation between x and y). However, scatter plots reveal that each sub-dataset looks very different. The dataset is intended to be used to teach students that it is important to plot their own datasets, rather than relying only on statistics.
-
-The Datasaurus was created by Alberto Cairo in this great [blog post](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html).
-
-He's been subsequently made even more famous in the paper [Same Stats, Different Graphs: Generating Datasets with Varied Appearance and Identical Statistics through Simulated Annealing](https://www.autodeskresearch.com/publications/samestats) by Justin Matejka and George Fitzmaurice.
-
-In the paper, Justin and George simulate a variety of datasets that the same summary statistics to the Datasaurus but have very different distributions. 
-
-This package also makes these datasets available for use as an advanced [Anscombe's Quartet](https://en.wikipedia.org/wiki/Anscombe%27s_quartet), available in R as `anscombe`.
