@@ -1,0 +1,110 @@
+---
+title: "Group Project 1"
+subtitle: "Biology 368/664 Bucknell University"
+output: github_document
+author: Group 1
+date: 9 Feb 2022
+---
+
+```{r Load Libraries, include=FALSE}
+# Load other packages here.
+if (!require("datasauRus")) install.packages("datasauRus"); library(datasauRus)
+if (!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
+if (!require("reshape2")) install.packages("reshape2"); library(reshape2)
+if (!require("cowplot")) install.packages("cowplot"); library(cowplot)
+```
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+This project will require you to develop a tutorial to teach Bucknell students how to use R for graphing and data analysis. 
+
+## Target Audience
+
+Discuss with your group the target audience for the tutorial. 
+Examples could be one of the new core Biology classes, another 300-level course (not 364), or a research group. 
+
+##### Target audiance is any ecology/biology student who has taken field data, the goal is to clean up field data so it is in a useable form for analysis, and determine if trials are interacting or not.
+
+#### HYPOTHESIS: there is a linear relationship between time and phosphorus levels.
+
+
+```{r}
+summer21_data <- read.csv(file = 'SUMMERDATAFINAL.csv')
+print(summer21_data)
+
+# print number of columns
+print (ncol(summer21_data))
+
+# print number of rows
+print(nrow(summer21_data))
+```
+
+####upon looking at the data, it is clear there are unnecessary spaces between datasets, column headers, and extra columns at the end of the dataset are present. We will first start by removing the spaces between datasets and column headers. gsub is a great way to remove unwanted spaces in strings of data. 
+
+```{r}
+newsummer21<-gsub(" ", " ", summer21_data)
+```
+
+<<<<<<< HEAD
+=======
+#### We can look at the data table now and see the spaces between column headers is replaced by a ".", now we can begin to remove the NA columns from the dataset. 
+
+```{r}
+summer21cleaned <- summer21_data[ -c(7:9,16:18,25:27) ]
+```
+
+#### given there were two trials per site, it is important to determine if the trials are independent of each other, or can be averaged together. To determine this, we can do a t-test, followed by a one-way ANOVA for confirmation. To get started, we will need to pipe some data into site and trial specific data frames.
+
+```{r}
+stoneyrunt1<-summer21cleaned %>% 
+  filter(Location == "Stoney Run",Trial==1)
+stoneyrunt2<-summer21cleaned %>% 
+  filter(Location == "Stoney Run",Trial==2)
+stoneyrunALL<-summer21cleaned %>%
+  filter(Location=="Stoney Run")
+conleyrunt1<-summer21cleaned %>% 
+  filter(Location == "Conley Run",Trial==1)
+conleyrunt2<-summer21cleaned %>% 
+  filter(Location == "Conley Run",Trial==2)
+conleyrunALL<-summer21cleaned %>%
+  filter(Location=="Conley Run")
+```
+
+#### Now that data frames have been made, we can begin analysis to determine relationship.
+
+
+```{r}
+t.test(stoneyrunt1$Phosphorus,stoneyrunt2$Phosphorus)
+t.test(conleyrunt1$Phosphorus,conleyrunt2$Phosphorus)
+```
+
+#### the t-test revealed a very low p-value for both sites phosphorus comparison, indicating the trials are independent of each other and cannot be averaged. To conclude this, lets run a one-way ANOVA 
+
+```{r}
+stoneyoneway<-aov(Phosphorus~Trial, data=stoneyrunALL)
+summary(stoneyoneway)
+conleyoneway<-aov(Phosphorus~Trial, data=conleyrunALL)
+summary(conleyoneway)
+```
+
+#### As the t-test suggested, there are significant differences within each trial so analyzation must be done separately per site, per trial.
+
+#### Now that we know the trials must be analyzed separetly, we can begin modeling. The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within Stoney Run Trial 1.
+```{r}
+ ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Phosphorus Over Time') +
+  theme_cowplot()
+
+```
+###It is seen in the graph above that there is a linear trend between Time and phosphorus levels.
+```{r}
+hist(stoneyrunt1$Phosphorus)
+hist(stoneyrunt2$Phosphorus)
+hist(conleyrunt1$Phosphorus)
+hist(conleyrunt2$Phosphorus)
+```
