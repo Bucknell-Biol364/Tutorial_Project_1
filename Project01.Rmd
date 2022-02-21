@@ -19,12 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-This project will require you to develop a tutorial to teach Bucknell students how to use R for graphing and data analysis. 
-
 ## Target Audience
-
-Discuss with your group the target audience for the tutorial. 
-Examples could be one of the new core Biology classes, another 300-level course (not 364), or a research group. 
 
 ##### Target audiance is any ecology/biology student who has taken field data, the goal is to clean up field data so it is in a useable form for analysis, and determine if trials are interacting or not.
 
@@ -78,12 +73,62 @@ conleyrunALL<-summer21cleaned %>%
 =======
 #### Now that data frames have been made, we can begin analysis to determine relationship.
 
+####Lets do some data visualization to determine visually and then a shapiro test, normality!!!
+
+#### The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within Stoney Run Trial 1.
 
 ```{r}
-t.test(stoneyrunt1$Phosphorus,stoneyrunt2$Phosphorus)
-t.test(conleyrunt1$Phosphorus,conleyrunt2$Phosphorus)
+ ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Time vs Phosphorus Levels') +
+  theme_cowplot()
 ```
->>>>>>> 79b576752041f4f5be03029d3fa3bdf0c4c7f08b
+
+###It is seen in the graph above that there is a linear trend between Time and phosphorus levels
+
+#### lets look at some individual histograms for each site.
+
+```{r}
+hist(stoneyrunt1$Phosphorus)
+hist(stoneyrunt2$Phosphorus)
+hist(conleyrunt1$Phosphorus)
+hist(conleyrunt2$Phosphorus)
+```
+
+```{r}
+shapiro.test(stoneyrunt1$Phosphorus)
+shapiro.test(stoneyrunt2$Phosphorus)
+shapiro.test(conleyrunt1$Phosphorus)
+shapiro.test(conleyrunt2$Phosphorus)
+```
+
+####None of the groups are normal.... wah wah wah. We need to log transform them before we can move on
+
+```{r}
+log_ST1P <- log(stoneyrunt1$Phosphorus)
+log_ST2P <- log(stoneyrunt2$Phosphorus)
+log_CR1P <- log(conleyrunt1$Phosphorus)
+log_CR2P <- log(conleyrunt2$Phosphorus)
+```
+
+####Lets see the histograms again now
+
+```{r}
+hist(log_ST1P)
+hist(log_ST2P)
+hist(log_CR1P)
+hist(log_CR2P)
+```
+
+####Those look a lot better! now we can proceed with a t-test 
+
+```{r}
+t.test(log_ST1P, log_ST2P)
+
+t.test(log_CR1P, log_CR2P)
+
+```
 
 
 #### the t-test revealed a very low p-value for both sites' phosphorus comparison, indicating the trials are independent of each other and cannot be averaged. To conclude this, lets run a one-way ANOVA 
@@ -97,47 +142,10 @@ summary(conleyoneway)
 
 #### As the t-test suggested, there are significant differences within each trial so analyzation must be done separately per site, per trial.
 
-#### The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within Stoney Run Trial 1.
-```{r}
- ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
-  geom_point(position = "jitter",size=0.05) + 
-  geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Time vs Phosphorus Levels') +
-  theme_cowplot()
 
-```
-###It is seen in the graph above that there is a linear trend between Time and phosphorus levels.
 
 #Acknowledgements
-Work was completed by Sierra Rider, Olivia Bongiovi, and Kelsee Dunn.
+RMD completed by Sierra Rider, Olivia Bongiovi, and Kelsee Dunn.
+Data was collected by the McTammany Lab extreme team summer of 2021 with emphasis on Dr. Matthew McTammany, Olivia Bongiovi, Raegan Dunwoodie, and Sierra Rider.
 
-## Groups
-
-You will work with the same groups as for the Homework 2 Peer review. 
-
-```{r}
-PeerGroups1 <- read_csv("../00-Syllabus/PeerGroups1.csv")
-PeerGroups1 %>% 
-  select(-MAJR, -CLAS, ) %>%
-  print()
-```
-
-## Grading
-
-Each student will be expected to complete the following tasks to earn 85% of the points available for this assignment (21/25).
-
-- Identify and obtain suitable dataset
-- Use a Github repository and version control to collaborate on the project
-- Spend 4-6 hours preparing, coding, and testing tutorial
-  + Data exploration
-  + Data visualization
-  + Hypothesis testing
-- Present tutorial in class
-- Provide public archive suitable for sharing to students/faculty
-
-Tutorials from previous classes can be viewed at our public github site: https://github.com/Bucknell-Biol364
-
-Each group should use an *Acknowledgements* section to document the participation of each member and the collaboration within and between groups.
-
-Additional credit will be awarded for providing assistance to other groups and for the development of a tutorial that goes beyond the minimal expectations listed above.
 
