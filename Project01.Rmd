@@ -12,6 +12,7 @@ if (!require("datasauRus")) install.packages("datasauRus"); library(datasauRus)
 if (!require("tidyverse")) install.packages("tidyverse"); library(tidyverse)
 if (!require("reshape2")) install.packages("reshape2"); library(reshape2)
 if (!require("cowplot")) install.packages("cowplot"); library(cowplot)
+if (!require("ggplot2")) install.packages("ggplot2"); library(ggplot2)
 ```
 
 ```{r}
@@ -88,6 +89,21 @@ conleyrunALL<-summer21cleaned %>%
 ###It is seen in the graph above that there is a linear trend between Time and phosphorus levels
 
 #### lets look at some individual histograms for each site.
+
+```{r}
+ggplot() +
+  geom_line(data = stoneyrunt1, mapping = aes(x= Time, y= Phosphorus), color= "blue") +
+  geom_point(data = stoneyrunt1, mapping = aes(x= Time, y= Phosphorus), color= "blue")+
+  geom_line(data = stoneyrunt2, mapping = aes(x= Time, y= Phosphorus), color= "red") +
+  geom_point(data = stoneyrunt2, mapping = aes(x= Time, y= Phosphorus), color= "red")+
+  geom_line(data = conleyrunt1, mapping = aes(x= Time, y= Phosphorus), color= "green") +
+  geom_point(data = conleyrunt1, mapping = aes(x= Time, y= Phosphorus), color= "green")+
+  geom_line(data = conleyrunt1, mapping = aes(x= Time, y= Phosphorus), color= "orange")
+  geom_point(data = conleyrunt2, mapping = aes(x= Time, y= Phosphorus), color= "orange")
+
+ 
+```
+
 
 ```{r}
 hist(stoneyrunt1$Phosphorus)
