@@ -72,32 +72,6 @@ conleyrunALL<-summer21cleaned %>%
 #### Now that data frames have been made, we can begin analysis to determine relationship.
 
 
-#### Now that we know the trials must be analyzed separetly, we can begin modeling. The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within Stoney Run Trial 1.
-```{r}
- ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
-  geom_point(position = "jitter",size=0.05) + 
-  geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Phosphorus Over Time') +
-  theme_cowplot()
-
- ggplot(stoneyrunt2, aes(x = Time, y = Phosphorus)) +
-  geom_point(position = "jitter",size=0.05) + 
-  geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Phosphorus Over Time') +
-  theme_cowplot()
- 
-  ggplot(conleyrunt1, aes(x = Time, y = Phosphorus)) +
-  geom_point(position = "jitter",size=0.05) + 
-  geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Phosphorus Over Time') +
-  theme_cowplot()
-  
-   ggplot(conleyrunt2, aes(x = Time, y = Phosphorus)) +
-  geom_point(position = "jitter",size=0.05) + 
-  geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Phosphorus Over Time') +
-  theme_cowplot()
-```
 
 ```{r}
 t.test(stoneyrunt1$Phosphorus,stoneyrunt2$Phosphorus)
