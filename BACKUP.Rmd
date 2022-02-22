@@ -116,14 +116,33 @@ summary(conleyoneway)
 #### As the t-test suggested, there are significant differences within each trial so analyzation must be done separately per site, per trial.
 
 
-###It is seen in the graph above that there is a linear trend between Time and phosphorus levels.
-```{r}
-hist(stoneyrunt1$Phosphorus)
-hist(stoneyrunt2$Phosphorus)
-hist(conleyrunt1$Phosphorus)
-hist(conleyrunt2$Phosphorus)
-```
 
+#### Now that we know the trials must be analyzed separetly, we can begin modeling. The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within Stoney Run Trial 1.
+```{r}
+ ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Phosphorus Over Time') +
+  theme_cowplot()
+
+ ggplot(stoneyrunt2, aes(x = Time, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Phosphorus Over Time') +
+  theme_cowplot()
+ 
+  ggplot(conleyrunt1, aes(x = Time, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Phosphorus Over Time') +
+  theme_cowplot()
+  
+   ggplot(conleyrunt2, aes(x = Time, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Phosphorus Over Time') +
+  theme_cowplot()
+```
 
 ####Acknowledgments 
 this Assignment was completed by Olivia Bongiovi, Kelsee Dunn, and Sierra Rider 
