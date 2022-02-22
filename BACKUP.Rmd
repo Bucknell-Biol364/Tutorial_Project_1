@@ -23,8 +23,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ##### Target audiance is any ecology/biology student who has taken field data, the goal is to clean up field data so it is in a useable form for analysis, and determine if trials are interacting or not.
 
-#### HYPOTHESIS: there is a linear relationship between time and phosphorus levels.
-
 
 ```{r}
 summer21_data <- read.csv(file = 'SUMMERDATAFINAL.csv')
@@ -43,8 +41,6 @@ print(nrow(summer21_data))
 newsummer21<-gsub(" ", " ", summer21_data)
 ```
 
-<<<<<<< HEAD
-=======
 #### We can look at the data table now and see the spaces between column headers is replaced by a ".", now we can begin to remove the NA columns from the dataset. 
 
 ```{r}
@@ -71,33 +67,37 @@ conleyrunALL<-summer21cleaned %>%
 
 #### Now that data frames have been made, we can begin analysis to determine relationship.
 
+#### HYPOTHESIS: there is a linear relationship between time and phosphorus levels.
 
-#### Now that we know the trials must be analyzed separetly, we can begin modeling. The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within Stoney Run Trial 1.
+#### The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within the sites and between trials.
 ```{r}
  ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
   geom_point(position = "jitter",size=0.05) + 
   geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Phosphorus Over Time') +
+  ggtitle('C:  Phosphorus Over Time, Stoney Run Trial 1') +
   theme_cowplot()
 
  ggplot(stoneyrunt2, aes(x = Time, y = Phosphorus)) +
   geom_point(position = "jitter",size=0.05) + 
   geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Phosphorus Over Time') +
+  ggtitle('C:  Phosphorus Over Time, Stoney Run Trial 2') +
   theme_cowplot()
  
   ggplot(conleyrunt1, aes(x = Time, y = Phosphorus)) +
   geom_point(position = "jitter",size=0.05) + 
   geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Phosphorus Over Time') +
+  ggtitle('C:  Phosphorus Over Time, Conley Run Trial 1') +
   theme_cowplot()
   
    ggplot(conleyrunt2, aes(x = Time, y = Phosphorus)) +
   geom_point(position = "jitter",size=0.05) + 
   geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Phosphorus Over Time') +
+  ggtitle('C:  Phosphorus Over Time, Conley Run Trial 2') +
   theme_cowplot()
 ```
+
+#### to determine relationships within locations, we can run a t-test and look at p-values.
+
 
 ```{r}
 t.test(stoneyrunt1$Phosphorus,stoneyrunt2$Phosphorus)
@@ -116,14 +116,7 @@ summary(conleyoneway)
 #### As the t-test suggested, there are significant differences within each trial so analyzation must be done separately per site, per trial.
 
 
-###It is seen in the graph above that there is a linear trend between Time and phosphorus levels.
-```{r}
-hist(stoneyrunt1$Phosphorus)
-hist(stoneyrunt2$Phosphorus)
-hist(conleyrunt1$Phosphorus)
-hist(conleyrunt2$Phosphorus)
-```
-
+####It is seen in the graphs above that there is a linear trend between Time and phosphorus levels, and analyzation should proceed with caution.
 
 ####Acknowledgments 
 this Assignment was completed by Olivia Bongiovi, Kelsee Dunn, and Sierra Rider 
