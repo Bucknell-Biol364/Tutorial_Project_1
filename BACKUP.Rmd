@@ -19,12 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-This project will require you to develop a tutorial to teach Bucknell students how to use R for graphing and data analysis. 
-
 ## Target Audience
-
-Discuss with your group the target audience for the tutorial. 
-Examples could be one of the new core Biology classes, another 300-level course (not 364), or a research group. 
 
 ##### Target audiance is any ecology/biology student who has taken field data, the goal is to clean up field data so it is in a useable form for analysis, and determine if trials are interacting or not.
 
@@ -73,8 +68,36 @@ conleyrunALL<-summer21cleaned %>%
   filter(Location=="Conley Run")
 ```
 
+
 #### Now that data frames have been made, we can begin analysis to determine relationship.
 
+
+#### Now that we know the trials must be analyzed separetly, we can begin modeling. The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within Stoney Run Trial 1.
+```{r}
+ ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Phosphorus Over Time') +
+  theme_cowplot()
+
+ ggplot(stoneyrunt2, aes(x = Time, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Phosphorus Over Time') +
+  theme_cowplot()
+ 
+  ggplot(conleyrunt1, aes(x = Time, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Phosphorus Over Time') +
+  theme_cowplot()
+  
+   ggplot(conleyrunt2, aes(x = Time, y = Phosphorus)) +
+  geom_point(position = "jitter",size=0.05) + 
+  geom_smooth(method='lm',se=FALSE) + 
+  ggtitle('C:  Phosphorus Over Time') +
+  theme_cowplot()
+```
 
 ```{r}
 t.test(stoneyrunt1$Phosphorus,stoneyrunt2$Phosphorus)
@@ -92,15 +115,7 @@ summary(conleyoneway)
 
 #### As the t-test suggested, there are significant differences within each trial so analyzation must be done separately per site, per trial.
 
-#### Now that we know the trials must be analyzed separetly, we can begin modeling. The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within Stoney Run Trial 1.
-```{r}
- ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
-  geom_point(position = "jitter",size=0.05) + 
-  geom_smooth(method='lm',se=FALSE) + 
-  ggtitle('C:  Phosphorus Over Time') +
-  theme_cowplot()
 
-```
 ###It is seen in the graph above that there is a linear trend between Time and phosphorus levels.
 ```{r}
 hist(stoneyrunt1$Phosphorus)
@@ -108,3 +123,8 @@ hist(stoneyrunt2$Phosphorus)
 hist(conleyrunt1$Phosphorus)
 hist(conleyrunt2$Phosphorus)
 ```
+
+
+####Acknowledgments 
+this Assignment was completed by Olivia Bongiovi, Kelsee Dunn, and Sierra Rider 
+We would like to thank the McT Lab X-Stream team for the data especially Olivia Bongiovi, Raegan Dunwoodie, and Sierra Rider Advised by Dr. Matthew McTammany in the Summer of 2021
