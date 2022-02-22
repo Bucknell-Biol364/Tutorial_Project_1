@@ -69,7 +69,30 @@ conleyrunALL<-summer21cleaned %>%
 
 #### HYPOTHESIS: there is a linear relationship between time and phosphorus levels.
 
+<<<<<<< HEAD
 #### The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within the sites and between trials.
+=======
+
+```{r}
+t.test(stoneyrunt1$Phosphorus,stoneyrunt2$Phosphorus)
+t.test(conleyrunt1$Phosphorus,conleyrunt2$Phosphorus)
+```
+
+#### the t-test revealed a very low p-value for both sites phosphorus comparison, indicating the trials are independent of each other and cannot be averaged. To conclude this, lets run a one-way ANOVA 
+
+```{r}
+stoneyoneway<-aov(Phosphorus~Trial, data=stoneyrunALL)
+summary(stoneyoneway)
+conleyoneway<-aov(Phosphorus~Trial, data=conleyrunALL)
+summary(conleyoneway)
+```
+
+#### As the t-test suggested, there are significant differences within each trial so analyzation must be done separately per site, per trial.
+
+
+
+#### Now that we know the trials must be analyzed separetly, we can begin modeling. The code below is used to explain how to create a graph with two variables. Here we are using ggplot to show how Time and Phosphorus levels interact within Stoney Run Trial 1.
+>>>>>>> a7d0212c6b2c6c35e50bd1d222e712a1130e7dba
 ```{r}
  ggplot(stoneyrunt1, aes(x = Time, y = Phosphorus)) +
   geom_point(position = "jitter",size=0.05) + 
@@ -96,6 +119,7 @@ conleyrunALL<-summer21cleaned %>%
   theme_cowplot()
 ```
 
+<<<<<<< HEAD
 #### to determine relationships within locations, we can run a t-test and look at p-values.
 
 
@@ -118,6 +142,8 @@ summary(conleyoneway)
 
 ####It is seen in the graphs above that there is a linear trend between Time and phosphorus levels, and analyzation should proceed with caution.
 
+=======
+>>>>>>> a7d0212c6b2c6c35e50bd1d222e712a1130e7dba
 ####Acknowledgments 
 this Assignment was completed by Olivia Bongiovi, Kelsee Dunn, and Sierra Rider 
 We would like to thank the McT Lab X-Stream team for the data especially Olivia Bongiovi, Raegan Dunwoodie, and Sierra Rider Advised by Dr. Matthew McTammany in the Summer of 2021
